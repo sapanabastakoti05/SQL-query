@@ -1,7 +1,7 @@
-1.Total revenue:
+1.show all file:
 select * from  pizza_sales_excel_file
 
-2.Total revenueAverage order value:
+2.Total revenue:
 select Sum(total_price) As Total_revenue from pizza_sales_excel_file
 
 3.Average order value:
