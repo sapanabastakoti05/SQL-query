@@ -1,50 +1,47 @@
+---Check existing tables:
 SHOW TABLES;
+
+---Select data from  the existing table:
 SELECT * FROM Redundancy;
 
-Copy The Data into Temporary Table
+---create temporary table & copy from it :
+#### Copy data from redundancy to a new temporary table named Redundancy_st
 
-CREATE TABLE Redundancy_st
+CREATE Temporary TABLE Redundancy_st
 LIKE Redundancy;
 
-SELECT * FROM SHOW TABLES;
-
-Insert redundancy_st
+---verify temporary table
+SHOW TABLES;
+---select data from Redundancy_st
 SELECT * FROM Redundancy_st;
 
--- Copy The Data into Temporary Table
-
-CREATE TABLE Redundancy_st
-LIKE Redundancy;
-
-SELECT * FROM Redundancy_st;
-
+---insert data into redundancy_st
 INSERT Redundancy_st
 SELECT * FROM Redundancy;
 
--- Remove Duplicates
-
-
+--- Remove Duplicates using Distinct:
 SELECT DISTINCT Organization, Spot, field, total_laid_off, percentage_laid_off, date, stage, country 
 FROM Redundancy_st;
 
--- Standadized Data
-
-SELECT company, TRIM(company)
+-- select the organization column and trimmed version of the organization from Redundancy_st table
+SELECT company, TRIM(Organization)
 FROM Redundancy_st
-ORDER BY 1;
+ORDER BY trimmed_organization;
 
+---update the organization column to trim whitespace
 UPDATE Redundancy_st
 SET Organization = TRIM(Organization);
 
+---select unique values from organization:
 SELECT DISTINCT Organization
 FROM Redundancy_st
-ORDER BY 1;
+ORDER BY organization;
 
 SELECT * FROM Redundancy_st;
 
 SELECT DISTINCT Field
 FROM Redundancy_st
-ORDER BY 1;
+ORDER BY Field;
 
 SELECT DISTINCT Organization
 FROM Redundancy_st
