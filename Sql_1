@@ -1,0 +1,170 @@
+SHOW TABLES;
+SELECT * FROM Redundancy;
+
+Copy The Data into Temporary Table
+
+CREATE TABLE Redundancy_st
+LIKE Redundancy;
+
+SELECT * FROM SHOW TABLES;
+
+Insert redundancy_st
+SELECT * FROM Redundancy_st;
+
+-- Copy The Data into Temporary Table
+
+CREATE TABLE Redundancy_st
+LIKE Redundancy;
+
+SELECT * FROM Redundancy_st;
+
+INSERT Redundancy_st
+SELECT * FROM Redundancy;
+
+-- Remove Duplicates
+
+
+SELECT DISTINCT Organization, Spot, field, total_laid_off, percentage_laid_off, date, stage, country 
+FROM Redundancy_st;
+
+-- Standadized Data
+
+SELECT company, TRIM(company)
+FROM Redundancy_st
+ORDER BY 1;
+
+UPDATE Redundancy_st
+SET Organization = TRIM(Organization);
+
+SELECT DISTINCT Organization
+FROM Redundancy_st
+ORDER BY 1;
+
+SELECT * FROM Redundancy_st;
+
+SELECT DISTINCT Field
+FROM Redundancy_st
+ORDER BY 1;
+
+SELECT DISTINCT Organization
+FROM Redundancy_st
+WHERE Organization LIKE 'Crypto%'
+ORDER BY 1;
+
+UPDATE Redundancy_st
+SET Field = 'Crypto'
+WHERE Field LIKE 'Crypto%';
+
+ Blank Row
+
+SELECT * FROM Redundancy_st;
+
+SELECT * FROM Redundancy_st
+WHERE total_laid_off IS NULL
+AND percentage_laid_off IS NULL;
+
+DELETE FROM Redundancy_st
+WHERE total_laid_off IS NULL
+AND percentage_laid_off IS NULL;
+
+SELECT * 
+FROM Redundancy_st
+WHERE Field IS NULL;
+
+DELETE FROM Redundancy_st
+WHERE Field IS NULL;
+
+
+ Null value replace using JOIN 
+
+SELECT * 
+FROM Redundancy_st
+WHERE Organization = 'Airbnb';
+
+SELECT * 
+FROM Redundancy_st t1
+JOIN Redundancy_st t2
+		ON t1.Organization = t2.Organization
+        AND t1.Spot = t2.Spot
+	WHERE t1.Field IS NULL
+    AND t2.Field IS NOT NULL;
+
+
+INSERT Redundancy_st
+SELECT * FROM Redundancy;
+
+Remove Duplicates
+
+WITH dup_cte AS (
+    SELECT *, 
+           ROW_NUMBER() OVER(PARTITION BY Organization, Spot, Field, total_laid_off, percentage_laid_off, date, stage, country ORDER BY (SELECT NULL)) AS rownum
+    FROM Redundancy_st
+)
+SELECT * 
+FROM dup_cte
+WHERE rownum > 1;
+
+
+Standadized Data
+
+SELECT Organization, TRIM(Organization)
+FROM Redundancy_st
+ORDER BY 1;
+
+UPDATE Redundancy_st
+SET Organization = TRIM(Organization);
+
+SELECT DISTINCT Organization
+FROM Redundancy_st
+ORDER BY 1;
+
+SELECT * FROM Redundancy_st;
+
+SELECT DISTINCT Field
+FROM Redundancy_st
+ORDER BY 1;
+
+SELECT DISTINCT Field
+FROM Redundancy_st
+WHERE Field LIKE 'Crypto%'
+ORDER BY 1;
+
+UPDATE Redundancy_st
+SET Field = 'Crypto'
+WHERE Field LIKE 'Crypto%';
+
+Blank Row
+
+SELECT * FROM Redundancy_st;
+
+SELECT * FROM Redundancy_st
+WHERE total_laid_off IS NULL
+AND percentage_laid_off IS NULL;
+
+DELETE FROM Redundancy_st
+WHERE total_laid_off IS NULL
+AND percentage_laid_off IS NULL;
+
+SELECT * 
+FROM Redundancy_st
+WHERE Field IS NULL;
+
+DELETE FROM Redundancy_st
+WHERE Field IS NULL;
+
+
+ Null value replace using JOIN 
+
+SELECT * 
+FROM Redundancy_st
+WHERE Organization = 'Airbnb';
+
+SELECT * 
+FROM Redundancy_st t1
+JOIN Redundancy_st t2
+		ON t1.Organization = t2.Organization
+        AND t1.Spot = t2.spot
+	WHERE t1.Field IS NULL
+    AND t2.Field IS NOT NULL;
+
+
