@@ -37,47 +37,53 @@ SELECT DISTINCT Organization
 FROM Redundancy_st
 ORDER BY organization;
 
+---select all rows
 SELECT * FROM Redundancy_st;
 
+---select distinct value from the field column
 SELECT DISTINCT Field
 FROM Redundancy_st
 ORDER BY Field;
 
+---select distinct value from the organization column where organization start with 'crypto'
 SELECT DISTINCT Organization
 FROM Redundancy_st
 WHERE Organization LIKE 'Crypto%'
-ORDER BY 1;
+ORDER BY organization;
 
+---Update the field column to 'crypto' where it start with 'Crypto'
 UPDATE Redundancy_st
 SET Field = 'Crypto'
 WHERE Field LIKE 'Crypto%';
 
- Blank Row
-
+---select all row to see updated data
 SELECT * FROM Redundancy_st;
 
+---select rows where total_laid_off and percentage_laid_off are Null:
 SELECT * FROM Redundancy_st
 WHERE total_laid_off IS NULL
 AND percentage_laid_off IS NULL;
 
+---delete rows where total_laid_off and percentage_laid_off are Null:
 DELETE FROM Redundancy_st
 WHERE total_laid_off IS NULL
 AND percentage_laid_off IS NULL;
 
+---select rows where field is null:
 SELECT * 
 FROM Redundancy_st
 WHERE Field IS NULL;
 
+---delete rows where field is null:
 DELETE FROM Redundancy_st
 WHERE Field IS NULL;
 
-
- Null value replace using JOIN 
-
-SELECT * 
+---select rows where organization is 'Airbnb'
+ SELECT * 
 FROM Redundancy_st
 WHERE Organization = 'Airbnb';
 
+---Replace null value in Field using join:
 SELECT * 
 FROM Redundancy_st t1
 JOIN Redundancy_st t2
@@ -86,82 +92,33 @@ JOIN Redundancy_st t2
 	WHERE t1.Field IS NULL
     AND t2.Field IS NOT NULL;
 
-
+---Insert data from Redundancy to Redundancy_st
 INSERT Redundancy_st
 SELECT * FROM Redundancy;
 
-Remove Duplicates
+---Remove Duplicates
 
 WITH dup_cte AS (
     SELECT *, 
            ROW_NUMBER() OVER(PARTITION BY Organization, Spot, Field, total_laid_off, percentage_laid_off, date, stage, country ORDER BY (SELECT NULL)) AS rownum
     FROM Redundancy_st
 )
-SELECT * 
-FROM dup_cte
-WHERE rownum > 1;
+DELETE FROM Redundancy_st
+WHERE id IN (SELECT id From dup_cte where rownum>1);
 
-
-Standadized Data
-
+---select the 'organization' and its trimmed version from the 'redundancy_st' table ordering the result by the 'organization'
 SELECT Organization, TRIM(Organization)
 FROM Redundancy_st
 ORDER BY 1;
 
+---update the 'redundancy_st' table and set the 'organization' column to its trimmed version 
 UPDATE Redundancy_st
 SET Organization = TRIM(Organization);
 
+---select distinct organization value from the redundancy_st table  and order them
 SELECT DISTINCT Organization
 FROM Redundancy_st
 ORDER BY 1;
 
-SELECT * FROM Redundancy_st;
-
-SELECT DISTINCT Field
-FROM Redundancy_st
-ORDER BY 1;
-
-SELECT DISTINCT Field
-FROM Redundancy_st
-WHERE Field LIKE 'Crypto%'
-ORDER BY 1;
-
-UPDATE Redundancy_st
-SET Field = 'Crypto'
-WHERE Field LIKE 'Crypto%';
-
-Blank Row
-
-SELECT * FROM Redundancy_st;
-
-SELECT * FROM Redundancy_st
-WHERE total_laid_off IS NULL
-AND percentage_laid_off IS NULL;
-
-DELETE FROM Redundancy_st
-WHERE total_laid_off IS NULL
-AND percentage_laid_off IS NULL;
-
-SELECT * 
-FROM Redundancy_st
-WHERE Field IS NULL;
-
-DELETE FROM Redundancy_st
-WHERE Field IS NULL;
-
-
- Null value replace using JOIN 
-
-SELECT * 
-FROM Redundancy_st
-WHERE Organization = 'Airbnb';
-
-SELECT * 
-FROM Redundancy_st t1
-JOIN Redundancy_st t2
-		ON t1.Organization = t2.Organization
-        AND t1.Spot = t2.spot
-	WHERE t1.Field IS NULL
-    AND t2.Field IS NOT NULL;
 
 
